@@ -105,13 +105,15 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun TopAppBarWithSearch(navController: NavHostController) {
     TopAppBar(
-        modifier = Modifier.fillMaxWidth(), // ✅ Ocupa TODO el ancho de la pantalla
+        modifier = Modifier
+            .fillMaxWidth(),
+        windowInsets = WindowInsets.statusBars, // ✅ Evita que la barra superior cubra la barra de notificaciones
         title = {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.Red)
-                    .padding(horizontal = 16.dp, vertical = 8.dp), // ✅ Evita desalineaciones
+                    .background(Color.Red) // 🔥 Aplica fondo rojo solo a la AppBar
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -130,6 +132,8 @@ fun TopAppBarWithSearch(navController: NavHostController) {
                     )
                 }
 
+                Spacer(modifier = Modifier.weight(1f))
+
                 // 🔥 BOTÓN CIRCULAR DE BÚSQUEDA (LUPA) A LA DERECHA
                 IconButton(
                     onClick = { navController.navigate("fight_search") },
@@ -147,11 +151,12 @@ fun TopAppBarWithSearch(navController: NavHostController) {
             }
         },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
-            containerColor = Color.Red, // ✅ Asegura el fondo rojo visible
+            containerColor = Color.Red, // 🔥 Asegura el fondo rojo visible
             titleContentColor = Color.White
         )
     )
 }
+
 
 
 
