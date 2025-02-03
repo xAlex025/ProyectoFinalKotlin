@@ -60,6 +60,9 @@ dependencies {
 
     implementation ("androidx.compose.foundation:foundation:1.5.1")
 
+    implementation("androidx.compose.material:material:1.5.0")
+
+
 
     //coil
 
@@ -71,6 +74,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.ui.test.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

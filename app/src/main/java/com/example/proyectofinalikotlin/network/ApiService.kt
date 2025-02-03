@@ -1,5 +1,6 @@
 package com.example.proyectofinalikotlin.network
 
+import com.example.proyectofinal.model.FighterRecordResponse
 import com.example.proyectofinal.model.FighterResponse
 import com.example.proyectofinalikotlin.models.CategoriesResponse
 import okhttp3.Interceptor
@@ -16,6 +17,13 @@ interface ApiService {
 
     @GET("fighters")
     suspend fun getFightersByCategory(@Query("category") category: String): FighterResponse
+
+    @GET("fighters")
+    suspend fun getFightersBySearch(@Query("search") search: String): FighterResponse
+
+    @GET("fighters/records")
+    suspend fun getFighterStats(@Query("id") id: String): FighterRecordResponse
+
 
     @GET("categories")
     suspend fun getAllCategories(): CategoriesResponse

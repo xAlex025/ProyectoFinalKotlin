@@ -6,11 +6,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.proyectofinalikotlin.viewmodel.CategoryViewModel
@@ -68,22 +72,38 @@ fun CategoryListScreen(viewModel: CategoryViewModel, onCategoryClick: (String) -
 fun CategoryItem(category: String, onClick: (String) -> Unit) {
     Card(
         modifier = Modifier
-            .fillMaxWidth() // 🔥 Ahora ocupa todo el ancho disponible
-            .padding(horizontal = 16.dp, vertical = 4.dp) // 🔥 Espaciado horizontal y vertical uniforme
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
             .clickable { onClick(category) },
-        colors = CardDefaults.cardColors(
-            containerColor = Color.DarkGray,
-            contentColor = Color.White
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E)),
+        elevation = CardDefaults.cardElevation(6.dp),
+        shape = RoundedCornerShape(12.dp)
     ) {
-        Text(
-            text = category,
-            fontSize = 16.sp,
-            modifier = Modifier.padding(16.dp),
-            color = Color.White
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.Star,
+                contentDescription = "Categoría",
+                tint = Color.Red,
+                modifier = Modifier.size(24.dp)
+            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Text(
+                text = category,
+                color = Color.White,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }
+
+
 
 
