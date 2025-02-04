@@ -1,5 +1,7 @@
 package com.example.proyectofinalikotlin.views
 
+import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,20 +23,18 @@ import com.example.proyectofinalikotlin.viewmodel.CategoryViewModel
 
 
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun CategoryListScreen(viewModel: CategoryViewModel, onCategoryClick: (String) -> Unit) {
     val categories = viewModel.categories
     val error = viewModel.error
     val errorMessage = viewModel.errorMessage
 
-    Scaffold(
-        containerColor = Color.Black,
-        contentColor = Color.Red
-    ) { paddingValues ->
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues) // ✅ Aplica el padding del Scaffold
+                .padding(top = 10.dp)
         ) {
             when {
                 error -> {
@@ -66,7 +66,7 @@ fun CategoryListScreen(viewModel: CategoryViewModel, onCategoryClick: (String) -
             }
         }
     }
-}
+
 
 @Composable
 fun CategoryItem(category: String, onClick: (String) -> Unit) {

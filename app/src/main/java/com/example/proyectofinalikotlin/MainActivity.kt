@@ -4,11 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.List
@@ -18,13 +15,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.proyectofinalikotlin.ui.theme.ProyectoFinalIKotlinTheme
 import com.example.proyectofinalikotlin.viewmodel.CategoryViewModel
 import com.example.proyectofinalikotlin.viewmodels.FighterStatsViewModel
@@ -38,7 +36,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             ProyectoFinalIKotlinTheme {
                 val navController = rememberNavController()
-
                 val categoryViewModel: CategoryViewModel = viewModel()
                 val fighterViewModel: FighterViewModel = viewModel()
                 val fighterStatsViewModel: FighterStatsViewModel = viewModel()
@@ -50,10 +47,7 @@ class MainActivity : ComponentActivity() {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(
-                                top = paddingValues.calculateTopPadding() - 41.dp, // 🔥 Reduce el espacio superior
-                                bottom = paddingValues.calculateBottomPadding()
-                            ) // ✅ Solo padding inferior
+                            .padding(paddingValues) // ✅ Respeta solo el padding inferior
                     ) {
                         NavHost(
                             navController = navController,
@@ -76,11 +70,12 @@ class MainActivity : ComponentActivity() {
                                     viewModel = fighterViewModel,
                                     category = category,
                                     onBack = { navController.popBackStack() },
+                                    navController = navController
                                 )
                             }
 
                             composable("fight_search") {
-                                FighterSearchScreen(viewModel = fighterViewModel )
+                                FighterSearchScreen(viewModel = fighterViewModel)
                             }
 
                             composable("statistics") {
@@ -93,6 +88,15 @@ class MainActivity : ComponentActivity() {
                                 val fighterId = backStackEntry.arguments?.getString("fighterId") ?: ""
                                 FighterStatsDetailsScreen(viewModel = fighterStatsViewModel, fighterId = fighterId)
                             }
+
+                            composable("fighter_detail/{fighterId}") { backStackEntry ->
+                                val fighterId = backStackEntry.arguments?.getString("fighterId") ?: ""
+                                FighterDetailScreen(
+                                    viewModel = fighterViewModel,
+                                    fighterId = fighterId,
+                                    navController  = navController
+
+                                )
                         }
                     }
                 }
@@ -101,61 +105,71 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppBarWithSearch(navController: NavHostController) {
     TopAppBar(
-        modifier = Modifier
-            .fillMaxWidth(),
-        windowInsets = WindowInsets.statusBars, // ✅ Evita que la barra superior cubra la barra de notificaciones
+        colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = Color.Red),
+        modifier = Modifier.fillMaxWidth()
+            .windowInsetsPadding(WindowInsets.statusBars.only(WindowInsetsSides.Top))
+           ,
         title = {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.Red) // 🔥 Aplica fondo rojo solo a la AppBar
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                // 🔥 LOGO IZQUIERDA
-                Box(
+                /* // 🔥 LOGO IZQUIERDA
+                IconButton(
+                    onClick = { /* Acción del logo */ },
                     modifier = Modifier
-                        .size(45.dp)
-                        .background(Color.White, shape = CircleShape)
-                        .padding(5.dp),
-                    contentAlignment = Alignment.Center
+                        .size(40.dp)
+                        .padding(start = 8.dp)
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    Icon(
+                        imageVector = Icons.Default.Face,
                         contentDescription = "Logo",
-                        modifier = Modifier.fillMaxSize()
+                        tint = Color.White,
+                        modifier = Modifier.size(50.dp)
+
                     )
                 }
 
-                Spacer(modifier = Modifier.weight(1f))
+                 */
+
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data("https://pngimg.com/d/ufc_PNG61.png")
+                       .build(),
+                    modifier = Modifier
+                        .clickable { navController.navigate("categories") }
+                        .size(70.dp)
+                        .padding(2.dp),
+                    contentDescription = "Foto del luchador",
+
+
+                )
 
                 // 🔥 BOTÓN CIRCULAR DE BÚSQUEDA (LUPA) A LA DERECHA
                 IconButton(
                     onClick = { navController.navigate("fight_search") },
                     modifier = Modifier
                         .size(40.dp)
-                        .background(Color.White.copy(alpha = 0.2f), shape = CircleShape)
+                        .padding(end = 8.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Search,
                         contentDescription = "Buscar Peleas",
                         tint = Color.White,
-                        modifier = Modifier.size(28.dp)
+                        modifier = Modifier.size(50.dp)
                     )
                 }
             }
-        },
-        colors = TopAppBarDefaults.mediumTopAppBarColors(
-            containerColor = Color.Red, // 🔥 Asegura el fondo rojo visible
-            titleContentColor = Color.White
-        )
+        }
     )
 }
+
 
 
 
@@ -164,7 +178,7 @@ fun TopAppBarWithSearch(navController: NavHostController) {
 fun BottomNavigationBar(navController: NavHostController) {
     val items = listOf(
         BottomNavItem("categories", "Categorías", Icons.Default.List),
-        BottomNavItem("fight_search", "Peleas", Icons.Default.Face), // 🔥 Ahora tiene un icono mejor
+        BottomNavItem("fight_search", "Peleas", Icons.Default.Face),
         BottomNavItem("statistics", "Estadísticas", Icons.Default.Star)
     )
 
@@ -189,6 +203,7 @@ fun BottomNavigationBar(navController: NavHostController) {
             )
         }
     }
-}
+}}
+
 
 data class BottomNavItem(val route: String, val title: String, val icon: androidx.compose.ui.graphics.vector.ImageVector)

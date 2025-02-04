@@ -28,6 +28,8 @@ interface ApiService {
     @GET("categories")
     suspend fun getAllCategories(): CategoriesResponse
 
+
+
      companion object {
         private const val BASE_URL = "https://v1.mma.api-sports.io/"
         private const val API_KEY = "0b7f7428c63a9531637766d1af1be3fb" // ⚠️ Reemplaza con tu API Key real

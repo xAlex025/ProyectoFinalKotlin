@@ -14,27 +14,31 @@ package com.example.proyectofinalikotlin.viewmodels
         var fighterListResponse: List<Fighter> by mutableStateOf(listOf())
         var errorMessage: String by mutableStateOf("")
         var error: Boolean by mutableStateOf(false)
+        var selectedFighter by mutableStateOf<Fighter?>(null)
 
 
 
         fun getFighterById(id: String) {
             viewModelScope.launch {
                 try {
-                    val response = ApiService.instance.getFightersById(id) // ✅ Ahora sí devuelve datos
+                    val response = ApiService.instance.getFightersById(id)
 
-                    if (response.results > 0) {
-                        fighterListResponse = response.response // ✅ Asigna la lista de luchadores
+                    if (response.results > 0 && response.response.isNotEmpty()) {
+                        selectedFighter = response.response.first() // ✅ Solo un luchador
                         error = false
                     } else {
                         errorMessage = "No se encontró ningún luchador con ID: $id"
                         error = true
+                        selectedFighter = null
                     }
                 } catch (e: Exception) {
                     errorMessage = "Error al obtener los datos: ${e.message}"
                     error = true
+                    selectedFighter = null
                 }
             }
         }
+
 
             fun getFighterByCategory(category: String) {
             viewModelScope.launch {

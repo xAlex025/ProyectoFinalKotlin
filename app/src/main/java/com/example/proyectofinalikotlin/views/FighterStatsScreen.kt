@@ -94,7 +94,7 @@ fun FighterStatsScreen(viewModel: FighterStatsViewModel , onFighterClick: (Strin
     }
 }
 
-
+/*
 @Composable
 fun FighterItem(fighter: Fighter, onClick: () -> Unit) {
     Card(
@@ -175,4 +175,6 @@ fun FighterItem(fighter: Fighter, onClick: () -> Unit) {
         }
     }
 }
+
+ */
 

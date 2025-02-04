@@ -19,8 +19,8 @@ fun FighterSearchScreen(viewModel: FighterViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
-            .statusBarsPadding()// ✅ Respeta la TopAppBar
+            .padding(8.dp)
+                //  .statusBarsPadding()// ✅ Respeta la TopAppBar
 
     ) {
         OutlinedTextField(
@@ -58,11 +58,14 @@ fun FighterSearchScreen(viewModel: FighterViewModel) {
             searchResults.isNotEmpty() -> {
                 LazyColumn {
                     items(searchResults) { fighter ->
-                        FighterItem(fighter)
+                        FighterItem(fighter, onClick = {})
                     }
                 }
             }
         }
     }
 }
+
+
+
 
