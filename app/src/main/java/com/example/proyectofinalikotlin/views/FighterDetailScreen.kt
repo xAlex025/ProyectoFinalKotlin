@@ -3,6 +3,7 @@ package com.example.proyectofinalikotlin.views
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -13,7 +14,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
+import androidx.compose.foundation.lazy.grid.*
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.proyectofinalikotlin.viewmodels.FighterViewModel
@@ -34,7 +37,7 @@ fun FighterDetailScreen(viewModel: FighterViewModel, fighterId: String, navContr
             .fillMaxSize()
             .background(Color.Black)
     ) {
-        // 🔥 ENCABEZADO PERSONALIZADO (En lugar de TopAppBar)
+        // 🔥 ENCABEZADO PERSONALIZADO (Sin TopAppBar)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -55,7 +58,7 @@ fun FighterDetailScreen(viewModel: FighterViewModel, fighterId: String, navContr
             )
         }
 
-       // Spacer(modifier = Modifier.height(5.dp))
+
 
         when {
             error -> {
@@ -90,11 +93,10 @@ fun FighterDetailScreen(viewModel: FighterViewModel, fighterId: String, navContr
                             .build(),
                         modifier = Modifier
                             .size(260.dp), // 📌 Imagen más grande
-                          //  .padding(8.dp),
                         contentDescription = fighter.name
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     // 🔥 Nombre del luchador
                     Text(
@@ -110,30 +112,54 @@ fun FighterDetailScreen(viewModel: FighterViewModel, fighterId: String, navContr
                         color = Color.Gray
                     )
 
-                    // 🔥 Información detallada
-                    InfoRow("Categoría", fighter.category ?: "No disponible")
-                    InfoRow("Altura", fighter.height ?: "No disponible")
-                    InfoRow("Peso", fighter.weight ?: "No disponible")
-                    InfoRow("Edad", fighter.age?.toString() ?: "No disponible")
-                    InfoRow("Alcance", fighter.reach ?: "No disponible")
-                    InfoRow("Estilo de pelea", fighter.stance ?: "No disponible")
-                    InfoRow("Equipo", fighter.team?.name ?: "No disponible")
-                   }
+                    // 📌 INFO EN GRID (2 COLUMNAS)
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        item { StatBox(value = fighter.category ?: "No disponible", label = "CATEGORÍA") }
+                        item { StatBox(value = fighter.nickname ?: "No disponible", label = "NOMBRE") }
+
+                        item { StatBox(value = fighter.height ?: "No disponible", label = "ALTURA") }
+                        item { StatBox(value = fighter.weight ?: "No disponible", label = "PESO") }
+                        item { StatBox(value = fighter.age?.toString() ?: "No disponible", label = "EDAD") }
+                        item { StatBox(value = fighter.reach ?: "No disponible", label = "ALCANCE") }
+                        item { StatBox(value = fighter.stance ?: "No disponible", label = "ESTILO DE PELEA") }
+                        item { StatBox(value = fighter.team?.name ?: "No disponible", label = "EQUIPO") }
+                     }
+                    }
+                }
             }
         }
     }
-}
 
-// 📌 Componente reutilizable para mostrar cada dato del luchador
+
+// 📌 ESTILO DEL BOX PARA ESTADÍSTICAS (Como la imagen de referencia)
 @Composable
-fun InfoRow(label: String, value: String) {
-    Row(
+fun StatBox(value: String, label: String) {
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 6.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+            .background(Color.DarkGray) // 🔥 Fondo oscuro
+            .padding(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = label, color = Color.Gray, fontSize = 18.sp)
-        Text(text = value, color = Color.White, fontSize = 18.sp)
+        Text(
+            text = value,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Text(
+            text = label,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = Color.Gray
+        )
     }
 }
