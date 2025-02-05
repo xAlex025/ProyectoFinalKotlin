@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
@@ -26,7 +27,7 @@ import com.example.proyectofinal.model.Fighter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FighterStatsScreen(viewModel: FighterStatsViewModel , onFighterClick: (String) -> Unit) {
+fun FighterStatsScreen(viewModel: FighterStatsViewModel  , navController: NavController) {
     val fighterList by remember { derivedStateOf { viewModel.fighterList } }
     val selectedFighterRecord by remember { derivedStateOf { viewModel.selectedFighterRecord } }
     val error by remember { derivedStateOf { viewModel.error } }
@@ -58,37 +59,12 @@ fun FighterStatsScreen(viewModel: FighterStatsViewModel , onFighterClick: (Strin
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(fighterList) { fighter ->
-                        FighterItem(fighter = fighter, onClick = { viewModel.getFighterStats(fighter.id.toString()) })
+                        FighterItem(fighter = fighter, onClick = {navController.navigate("fighter_stats_detail/${fighter.id}")  })
                     }
                 }
 
                 // 🔥 Estadísticas del luchador seleccionado
-                selectedFighterRecord?.let { fighterStats ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                            .background(Color.DarkGray),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(text = fighterStats.fighter.name, fontSize = 24.sp, color = Color.White)
-                            Spacer(modifier = Modifier.height(16.dp))
 
-                            Text("🏆 Victorias: ${fighterStats.total.win}", fontSize = 18.sp, color = Color.Green)
-                            Text("❌ Derrotas: ${fighterStats.total.loss}", fontSize = 18.sp, color = Color.Red)
-                            Text("➖ Empates: ${fighterStats.total.draw}", fontSize = 18.sp, color = Color.Gray)
-
-                            Spacer(modifier = Modifier.height(16.dp))
-
-                            Text("🥊 KO: ${fighterStats.ko.win} - ${fighterStats.ko.loss}", fontSize = 18.sp, color = Color.Yellow)
-                            Text("🤼‍♂️ Sumisiones: ${fighterStats.sub.win} - ${fighterStats.sub.loss}", fontSize = 18.sp, color = Color.Cyan)
-                        }
-                    }
-                }
             }
         }
     }

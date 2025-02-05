@@ -2,8 +2,6 @@ package com.example.proyectofinalikotlin.views
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -119,15 +117,14 @@ fun FighterDetailScreen(viewModel: FighterViewModel, fighterId: String, navContr
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        item { StatBox(value = fighter.category ?: "No disponible", label = "CATEGORÍA") }
-                        item { StatBox(value = fighter.nickname ?: "No disponible", label = "NOMBRE") }
-
-                        item { StatBox(value = fighter.height ?: "No disponible", label = "ALTURA") }
-                        item { StatBox(value = fighter.weight ?: "No disponible", label = "PESO") }
-                        item { StatBox(value = fighter.age?.toString() ?: "No disponible", label = "EDAD") }
-                        item { StatBox(value = fighter.reach ?: "No disponible", label = "ALCANCE") }
-                        item { StatBox(value = fighter.stance ?: "No disponible", label = "ESTILO DE PELEA") }
-                        item { StatBox(value = fighter.team?.name ?: "No disponible", label = "EQUIPO") }
+                        item { StatBox(value = fighter.category ?: "No disponible", name = "CATEGORÍA") }
+                        item { StatBox(value = fighter.nickname ?: "No disponible", name = "APODO") }
+                        item { StatBox(value = fighter.height ?: "No disponible", name = "ALTURA") }
+                        item { StatBox(value = fighter.weight ?: "No disponible", name = "PESO") }
+                        item { StatBox(value = fighter.age?.toString() ?: "No disponible", name = "EDAD") }
+                        item { StatBox(value = fighter.reach ?: "No disponible", name = "ALCANCE") }
+                        item { StatBox(value = fighter.stance ?: "No disponible", name = "ESTILO DE PELEA") }
+                        item { StatBox(value = fighter.team?.name ?: "No disponible", name = "EQUIPO") }
                      }
                     }
                 }
@@ -138,7 +135,7 @@ fun FighterDetailScreen(viewModel: FighterViewModel, fighterId: String, navContr
 
 // 📌 ESTILO DEL BOX PARA ESTADÍSTICAS (Como la imagen de referencia)
 @Composable
-fun StatBox(value: String, label: String) {
+fun StatBox(value: String, name: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -156,7 +153,7 @@ fun StatBox(value: String, label: String) {
         Spacer(modifier = Modifier.height(4.dp))
 
         Text(
-            text = label,
+            text = name,
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold,
             color = Color.Gray

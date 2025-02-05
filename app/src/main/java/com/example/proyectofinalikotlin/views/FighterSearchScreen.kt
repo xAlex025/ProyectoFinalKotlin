@@ -8,10 +8,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.proyectofinal.model.Fighter
 import com.example.proyectofinalikotlin.viewmodels.FighterViewModel
 @Composable
-fun FighterSearchScreen(viewModel: FighterViewModel) {
+fun FighterSearchScreen(viewModel: FighterViewModel, navController: NavHostController) {
     var query by remember { mutableStateOf("") }
     var searchResults by remember { mutableStateOf(emptyList<Fighter>()) }
     var isSearching by remember { mutableStateOf(false) }
@@ -58,7 +59,9 @@ fun FighterSearchScreen(viewModel: FighterViewModel) {
             searchResults.isNotEmpty() -> {
                 LazyColumn {
                     items(searchResults) { fighter ->
-                        FighterItem(fighter, onClick = {})
+                        FighterItem(fighter, onClick = {
+                            navController.navigate("fighter_detail/${fighter.id}")
+                        })
                     }
                 }
             }

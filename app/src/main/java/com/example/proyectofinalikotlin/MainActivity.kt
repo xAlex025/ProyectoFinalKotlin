@@ -35,76 +35,90 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ProyectoFinalIKotlinTheme {
-                val navController = rememberNavController()
-                val categoryViewModel: CategoryViewModel = viewModel()
-                val fighterViewModel: FighterViewModel = viewModel()
-                val fighterStatsViewModel: FighterStatsViewModel = viewModel()
+                Main()
+        }
+    }
+}
 
-                Scaffold(
-                    topBar = { TopAppBarWithSearch(navController) },
-                    bottomBar = { BottomNavigationBar(navController) }
-                ) { paddingValues ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues) // ✅ Respeta solo el padding inferior
-                    ) {
-                        NavHost(
-                            navController = navController,
-                            startDestination = "categories",
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            composable("categories") {
-                                CategoryListScreen(
-                                    viewModel = categoryViewModel,
-                                    onCategoryClick = { category ->
-                                        fighterViewModel.getFighterByCategory(category)
-                                        navController.navigate("fighters/$category")
-                                    }
-                                )
+
+    @Composable
+    fun Main() {
+
+
+        val navController = rememberNavController()
+        val categoryViewModel: CategoryViewModel = viewModel()
+        val fighterViewModel: FighterViewModel = viewModel()
+        val fighterStatsViewModel: FighterStatsViewModel = viewModel()
+
+        Scaffold(
+            topBar = { TopAppBarWithSearch(navController) },
+            bottomBar = { BottomNavigationBar(navController) }
+        ) { paddingValues ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues) // ✅ Respeta solo el padding inferior
+            ) {
+                NavHost(
+                    navController = navController,
+                    startDestination = "categories",
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    composable("categories") {
+                        CategoryListScreen(
+                            viewModel = categoryViewModel,
+                            onCategoryClick = { category ->
+                                fighterViewModel.getFighterByCategory(category)
+                                navController.navigate("fighters/$category")
                             }
+                        )
+                    }
 
-                            composable("fighters/{category}") { backStackEntry ->
-                                val category = backStackEntry.arguments?.getString("category") ?: ""
-                                FighterListScreen(
-                                    viewModel = fighterViewModel,
-                                    category = category,
-                                    onBack = { navController.popBackStack() },
-                                    navController = navController
-                                )
-                            }
+                    composable("fighters/{category}") { backStackEntry ->
+                        val category = backStackEntry.arguments?.getString("category") ?: ""
+                        FighterListScreen(
+                            viewModel = fighterViewModel,
+                            category = category,
+                            onBack = { navController.popBackStack() },
+                            navController = navController
+                        )
+                    }
 
-                            composable("fight_search") {
-                                FighterSearchScreen(viewModel = fighterViewModel)
-                            }
+                    composable("fight_search") {
+                        FighterSearchScreen(viewModel = fighterViewModel, navController = navController)
+                    }
 
-                            composable("statistics") {
-                                FighterStatsScreen(viewModel = fighterStatsViewModel) { fighterId ->
-                                    navController.navigate("statistics/$fighterId")
-                                }
-                            }
+                    composable("statistics") {
+                        FighterStatsScreen(viewModel = fighterStatsViewModel, navController = navController)
+                    }
 
-                            composable("statistics/{fighterId}") { backStackEntry ->
-                                val fighterId = backStackEntry.arguments?.getString("fighterId") ?: ""
-                                FighterStatsDetailsScreen(viewModel = fighterStatsViewModel, fighterId = fighterId)
-                            }
+                    composable("statistics/{fighterId}") { backStackEntry ->
+                        val fighterId = backStackEntry.arguments?.getString("fighterId") ?: ""
+                        FighterRecordScreen(viewModel = fighterStatsViewModel, fighterId = fighterId, navController = navController)
+                    }
 
-                            composable("fighter_detail/{fighterId}") { backStackEntry ->
-                                val fighterId = backStackEntry.arguments?.getString("fighterId") ?: ""
-                                FighterDetailScreen(
-                                    viewModel = fighterViewModel,
-                                    fighterId = fighterId,
-                                    navController  = navController
+                    composable("fighter_detail/{fighterId}") { backStackEntry ->
+                        val fighterId = backStackEntry.arguments?.getString("fighterId") ?: ""
+                        FighterDetailScreen(
+                            viewModel = fighterViewModel,
+                            fighterId = fighterId,
+                            navController  = navController
 
-                                )
-                        }
+                        )
+                    }
+                    composable("fighter_stats_detail/{fighterId}") { backStackEntry ->
+                        val fighterId = backStackEntry.arguments?.getString("fighterId") ?: ""
+                        FighterRecordScreen(
+                            viewModel = fighterStatsViewModel,
+                            fighterId = fighterId,
+                            navController  = navController
+
+                        )
                     }
                 }
             }
         }
     }
-}
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -120,23 +134,7 @@ fun TopAppBarWithSearch(navController: NavHostController) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                /* // 🔥 LOGO IZQUIERDA
-                IconButton(
-                    onClick = { /* Acción del logo */ },
-                    modifier = Modifier
-                        .size(40.dp)
-                        .padding(start = 8.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Face,
-                        contentDescription = "Logo",
-                        tint = Color.White,
-                        modifier = Modifier.size(50.dp)
 
-                    )
-                }
-
-                 */
 
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
@@ -169,10 +167,6 @@ fun TopAppBarWithSearch(navController: NavHostController) {
         }
     )
 }
-
-
-
-
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
