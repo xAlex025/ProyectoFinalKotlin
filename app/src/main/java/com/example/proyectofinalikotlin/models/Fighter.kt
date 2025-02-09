@@ -10,7 +10,7 @@ data class Fighter(
     val gender: String,
 
     @SerializedName("birth_date")
-    val birthDate: String?,  // Fecha de nacimiento en formato String
+    val birthDate: String?,
 
     val age: Int?,
     val height: String?,

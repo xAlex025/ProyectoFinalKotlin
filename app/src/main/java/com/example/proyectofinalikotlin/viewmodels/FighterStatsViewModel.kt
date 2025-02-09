@@ -13,10 +13,10 @@ import kotlinx.coroutines.launch
 
 class FighterStatsViewModel : ViewModel() {
 
-    var fighterList by mutableStateOf<List<Fighter>>(emptyList()) // 🔥 Lista de todos los luchadores
+    var fighterList by mutableStateOf<List<Fighter>>(emptyList())
         private set
 
-    var selectedFighterRecord by mutableStateOf<FighterRecord?>(null) // 🔥 Estadísticas del luchador seleccionado
+    var selectedFighterRecord by mutableStateOf<FighterRecord?>(null)
         private set
 
 
@@ -49,7 +49,6 @@ class FighterStatsViewModel : ViewModel() {
         }
     }
 
-    // ✅ Cargar estadísticas de un luchador cuando se selecciona
     fun getFighterStats(id: String) {
         viewModelScope.launch {
             try {

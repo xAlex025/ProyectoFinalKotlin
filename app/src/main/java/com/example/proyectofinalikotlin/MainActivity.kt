@@ -10,12 +10,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.SportsMma
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -25,6 +28,8 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.proyectofinalikotlin.ui.theme.ProyectoFinalIKotlinTheme
 import com.example.proyectofinalikotlin.viewmodel.CategoryViewModel
+import com.example.proyectofinalikotlin.viewmodels.FightStatisticsViewModel
+import com.example.proyectofinalikotlin.viewmodels.FightViewModel
 import com.example.proyectofinalikotlin.viewmodels.FighterStatsViewModel
 import com.example.proyectofinalikotlin.viewmodels.FighterViewModel
 import com.example.proyectofinalikotlin.views.*
@@ -49,6 +54,8 @@ class MainActivity : ComponentActivity() {
         val categoryViewModel: CategoryViewModel = viewModel()
         val fighterViewModel: FighterViewModel = viewModel()
         val fighterStatsViewModel: FighterStatsViewModel = viewModel()
+        val fightViewModel: FightViewModel = viewModel()
+        val fightStatsViewModel: FightStatisticsViewModel = viewModel()
 
         Scaffold(
             topBar = { TopAppBarWithSearch(navController) },
@@ -57,7 +64,7 @@ class MainActivity : ComponentActivity() {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues) // ✅ Respeta solo el padding inferior
+                    .padding(paddingValues)
             ) {
                 NavHost(
                     navController = navController,
@@ -88,14 +95,27 @@ class MainActivity : ComponentActivity() {
                         FighterSearchScreen(viewModel = fighterViewModel, navController = navController)
                     }
 
+                    composable("fighter_fights/{fighter.id}/year") {
+                        FightScreen(viewModel =  fightViewModel , navController = navController, fighterId = "fighter.id", season = "year")
+                    }
+
+                    composable("fights") {
+                        SelectFighterFightScreen(fighterViewModel = fighterViewModel, fighterStatsViewModel = fighterStatsViewModel, navController = navController)
+                    }
+
                     composable("statistics") {
                         FighterStatsScreen(viewModel = fighterStatsViewModel, navController = navController)
                     }
 
-                    composable("statistics/{fighterId}") { backStackEntry ->
-                        val fighterId = backStackEntry.arguments?.getString("fighterId") ?: ""
-                        FighterRecordScreen(viewModel = fighterStatsViewModel, fighterId = fighterId, navController = navController)
+                    composable("fighter_fights/{fighterId}/{year}") { backStackEntry ->
+                        val fighterId = backStackEntry.arguments?.getString("fighterId")
+                        val year = backStackEntry.arguments?.getString("year")
+
+                        if (fighterId != null && year != null) {
+                            FightScreen(fighterId = fighterId, season = year, viewModel = fightViewModel, navController = navController)
+                        }
                     }
+
 
                     composable("fighter_detail/{fighterId}") { backStackEntry ->
                         val fighterId = backStackEntry.arguments?.getString("fighterId") ?: ""
@@ -115,6 +135,12 @@ class MainActivity : ComponentActivity() {
 
                         )
                     }
+
+                    composable("fight_stats/{fightId}") { backStackEntry ->
+                        val fightId = backStackEntry.arguments?.getString("fightId") ?: ""
+                        FightStatsScreen(viewModel = fightStatsViewModel, fightId = fightId, navController = navController)
+                    }
+
                 }
             }
         }
@@ -149,7 +175,6 @@ fun TopAppBarWithSearch(navController: NavHostController) {
 
                 )
 
-                // 🔥 BOTÓN CIRCULAR DE BÚSQUEDA (LUPA) A LA DERECHA
                 IconButton(
                     onClick = { navController.navigate("fight_search") },
                     modifier = Modifier
@@ -172,7 +197,7 @@ fun TopAppBarWithSearch(navController: NavHostController) {
 fun BottomNavigationBar(navController: NavHostController) {
     val items = listOf(
         BottomNavItem("categories", "Categorías", Icons.Default.List),
-        BottomNavItem("fight_search", "Peleas", Icons.Default.Face),
+        BottomNavItem("fights", "Peleas", Icons.Filled.SportsMma),
         BottomNavItem("statistics", "Estadísticas", Icons.Default.Star)
     )
 
@@ -200,4 +225,5 @@ fun BottomNavigationBar(navController: NavHostController) {
 }}
 
 
-data class BottomNavItem(val route: String, val title: String, val icon: androidx.compose.ui.graphics.vector.ImageVector)
+data class BottomNavItem(val route: String, val title: String, val icon: ImageVector)
+

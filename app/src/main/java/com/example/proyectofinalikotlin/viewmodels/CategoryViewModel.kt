@@ -23,10 +23,10 @@ class CategoryViewModel : ViewModel() {
     fun getAllCategories () {
         viewModelScope.launch {
             try {
-                val response = ApiService.instance.getAllCategories() // ✅ Ahora sí devuelve datos
+                val response = ApiService.instance.getAllCategories()
 
                 if (response.results > 0) {
-                    categories = response.response // ✅ Asigna la lista de luchadores
+                    categories = response.response
                     error = false
                 } else {
                     errorMessage = "No se encontró  ninguna categoria"

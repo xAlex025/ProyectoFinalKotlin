@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import androidx.compose.foundation.lazy.grid.*
+import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.proyectofinalikotlin.viewmodels.FighterViewModel
@@ -35,7 +36,6 @@ fun FighterDetailScreen(viewModel: FighterViewModel, fighterId: String, navContr
             .fillMaxSize()
             .background(Color.Black)
     ) {
-        // 🔥 ENCABEZADO PERSONALIZADO (Sin TopAppBar)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -55,8 +55,6 @@ fun FighterDetailScreen(viewModel: FighterViewModel, fighterId: String, navContr
                 fontSize = 22.sp
             )
         }
-
-
 
         when {
             error -> {
@@ -84,19 +82,18 @@ fun FighterDetailScreen(viewModel: FighterViewModel, fighterId: String, navContr
                         .padding(horizontal = 16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // 🔥 Imagen grande del luchador
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
                             .data(fighter.photo)
                             .build(),
                         modifier = Modifier
-                            .size(260.dp), // 📌 Imagen más grande
+                            .size(230.dp),
+                        contentScale = ContentScale.Crop,
                         contentDescription = fighter.name
                     )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
 
-                    // 🔥 Nombre del luchador
                     Text(
                         text = fighter.name,
                         fontSize = 26.sp,
@@ -110,7 +107,6 @@ fun FighterDetailScreen(viewModel: FighterViewModel, fighterId: String, navContr
                         color = Color.Gray
                     )
 
-                    // 📌 INFO EN GRID (2 COLUMNAS)
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2),
                         modifier = Modifier.fillMaxSize(),
@@ -125,21 +121,19 @@ fun FighterDetailScreen(viewModel: FighterViewModel, fighterId: String, navContr
                         item { StatBox(value = fighter.reach ?: "No disponible", name = "ALCANCE") }
                         item { StatBox(value = fighter.stance ?: "No disponible", name = "ESTILO DE PELEA") }
                         item { StatBox(value = fighter.team?.name ?: "No disponible", name = "EQUIPO") }
-                     }
                     }
                 }
             }
         }
     }
+}
 
-
-// 📌 ESTILO DEL BOX PARA ESTADÍSTICAS (Como la imagen de referencia)
 @Composable
 fun StatBox(value: String, name: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.DarkGray) // 🔥 Fondo oscuro
+            .background(Color.DarkGray)
             .padding(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

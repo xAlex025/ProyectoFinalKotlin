@@ -7,22 +7,24 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.proyectofinal.model.Fighter
 import com.example.proyectofinalikotlin.viewmodels.FighterViewModel
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FighterSearchScreen(viewModel: FighterViewModel, navController: NavHostController) {
     var query by remember { mutableStateOf("") }
     var searchResults by remember { mutableStateOf(emptyList<Fighter>()) }
     var isSearching by remember { mutableStateOf(false) }
 
+    Spacer(modifier = Modifier.height(16.dp))
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(8.dp)
-                //  .statusBarsPadding()// ✅ Respeta la TopAppBar
-
     ) {
         OutlinedTextField(
             value = query,
@@ -35,12 +37,19 @@ fun FighterSearchScreen(viewModel: FighterViewModel, navController: NavHostContr
                         isSearching = false
                     }
                 } else {
-                    searchResults = emptyList() // ✅ Limpiar lista si el input está vacío
+                    searchResults = emptyList()
                 }
             },
-            label = { Text("Buscar Luchador") },
+            label = { Text("Buscar Luchador", color = Color.White) },
             modifier = Modifier.fillMaxWidth(),
-            singleLine = true
+            singleLine = true,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White,
+                cursorColor = Color.White,
+                focusedBorderColor = Color.White,
+                unfocusedBorderColor = Color.Gray
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -68,7 +77,3 @@ fun FighterSearchScreen(viewModel: FighterViewModel, navController: NavHostContr
         }
     }
 }
-
-
-
-

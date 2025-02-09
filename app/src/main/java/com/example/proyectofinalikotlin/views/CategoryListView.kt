@@ -31,6 +31,8 @@ fun CategoryListScreen(viewModel: CategoryViewModel, onCategoryClick: (String) -
     val errorMessage = viewModel.errorMessage
 
 
+
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -56,7 +58,7 @@ fun CategoryListScreen(viewModel: CategoryViewModel, onCategoryClick: (String) -
                 else -> {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp) // 🔥 Espaciado entre elementos
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(categories) { category ->
                             CategoryItem(category, onCategoryClick)
@@ -66,6 +68,7 @@ fun CategoryListScreen(viewModel: CategoryViewModel, onCategoryClick: (String) -
             }
         }
     }
+
 
 
 @Composable
