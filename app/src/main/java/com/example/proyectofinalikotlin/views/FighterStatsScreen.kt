@@ -27,60 +27,14 @@ import com.example.proyectofinal.model.Fighter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FighterStatsScreen(viewModel: FighterStatsViewModel  , navController: NavController) {
+fun FighterStatsScreen(viewModel: FighterStatsViewModel, navController: NavController) {
     val fighterList by remember { derivedStateOf { viewModel.fighterList } }
-    val selectedFighterRecord by remember { derivedStateOf { viewModel.selectedFighterRecord } }
     val error by remember { derivedStateOf { viewModel.error } }
 
-    Scaffold(
-        containerColor = Color.Black,
-        contentColor = Color.White,
-        topBar = {
-            TopAppBar(title = { Text("Estadísticas de Luchadores", color = Color.White) })
-        }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            if (error) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = "Error al cargar los datos", fontSize = 20.sp, color = Color.Red)
-                }
-            } else if (fighterList.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = Color.Red)
-                }
-            } else {
-                // 🔥 Lista de luchadores
-                LazyColumn(
-                    modifier = Modifier.weight(1f), // ✅ Ocupa solo la mitad superior
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(fighterList) { fighter ->
-                        FighterItem(fighter = fighter, onClick = {navController.navigate("fighter_stats_detail/${fighter.id}")  })
-                    }
-                }
-
-                // 🔥 Estadísticas del luchador seleccionado
-
-            }
-        }
-    }
-}
-
-/*
-@Composable
-fun FighterItem(fighter: Fighter, onClick: () -> Unit) {
-    Card(
+    Column(
         modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth()
-            .clickable { onClick() },
-        colors = CardDefaults.cardColors(containerColor = Color.Black),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+            .fillMaxSize()
+            .padding(top = 8.dp)
     ) {
         Row(
             modifier = Modifier
@@ -88,69 +42,35 @@ fun FighterItem(fighter: Fighter, onClick: () -> Unit) {
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // 🔥 Imagen del luchador con borde rojo
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(fighter.photo)
-                    .transformations(CircleCropTransformation())
-                    .build(),
-                modifier = Modifier
-                    .size(80.dp)
-                    .border(2.dp, Color.Red, CircleShape)
-                    .padding(2.dp),
-                contentDescription = fighter.name
+            Text(
+                text = "Estadísticas de Luchadores",
+                color = Color.White,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold
             )
+        }
 
-            Spacer(modifier = Modifier.width(12.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-            // 🔥 Información del luchador
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = fighter.name.uppercase(),
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                // 🔥 Categoría con efecto degradado
-                Box(
-                    modifier = Modifier
-                        .background(
-                            brush = Brush.horizontalGradient(
-                                colors = listOf(Color.Red, Color.Black)
-                            ),
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
-                ) {
-                    Text(
-                        text = fighter.category ?: "Desconocido",
-                        fontSize = 14.sp,
-                        color = Color.White
-                    )
+        if (error) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = "Error al cargar los datos", fontSize = 20.sp, color = Color.Red)
+            }
+        } else if (fighterList.isEmpty()) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(color = Color.Red)
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(fighterList) { fighter ->
+                    FighterItem(fighter = fighter, onClick = {
+                        navController.navigate("fighter_stats_detail/${fighter.id}")
+                    })
                 }
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                Row {
-                    Text(
-                        text = "Altura: ${fighter.height ?: "No disponible"}",
-                        fontSize = 14.sp,
-                        color = Color.LightGray
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Peso: ${fighter.weight ?: "No disponible"}",
-                        fontSize = 14.sp,
-                        color = Color.LightGray)
-                }
-
             }
         }
     }
 }
-
- */
-

@@ -24,7 +24,7 @@ package com.example.proyectofinalikotlin.viewmodels
                     val response = ApiService.instance.getFightersById(id)
 
                     if (response.results > 0 && response.response.isNotEmpty()) {
-                        selectedFighter = response.response.first() // ✅ Solo un luchador
+                        selectedFighter = response.response.first()
                         error = false
                     } else {
                         errorMessage = "No se encontró ningún luchador con ID: $id"
@@ -47,7 +47,7 @@ package com.example.proyectofinalikotlin.viewmodels
                     fighterListResponse = emptyList()
                     val response = ApiService.instance.getFightersByCategory(category)
                     if (response.results > 0) {
-                        fighterListResponse = response.response // ✅ Asigna la lista de luchadores
+                        fighterListResponse = response.response
                         error = false
                     } else {
                         errorMessage = "No se encontró ningún luchador con ID: $category"
@@ -60,49 +60,22 @@ package com.example.proyectofinalikotlin.viewmodels
             }
         }
 
-/*
-        fun getFighterBySearch(search: String) {
-            viewModelScope.launch {
-                try {
-                    val response = ApiService.instance.getFightersBySearch(search)
-                    if (response.results > 0) {
-                        fighterListResponse = response.response // ✅ Asigna la lista de luchadores
-                        error = false
-                    } else {
-                        errorMessage = "No se encontró ningún luchador con el nombre: $search"
-                        error = true
-                    }
-                } catch (e: Exception) {
-                    errorMessage = "Error al obtener los datos: ${e.message}"
-                    error = true
-                }
-            }
-        }
-
-
- */
 
         fun getFighterBySearch(search: String, callback: (List<Fighter>) -> Unit) {
             viewModelScope.launch {
                 try {
                     val response = ApiService.instance.getFightersBySearch(search)
                     if (response.results > 0) {
-                        callback(response.response) // 🔥 Devuelve solo los resultados filtrados
+                        callback(response.response)
                     } else {
-                        callback(emptyList()) // 🔥 Devuelve lista vacía si no hay resultados
+                        callback(emptyList())
                     }
                 } catch (e: Exception) {
-                    callback(emptyList()) // 🔥 En caso de error, devuelve lista vacía
+                    callback(emptyList())
                 }
             }
         }
 
-/*
-        fun getFighterBySearch(search: String): List<Fighter> {
-            return fighterListResponse.filter { it.name.contains(search, ignoreCase = true) }
-        }
-
- */
 
         fun resetFighterList() {
             fighterListResponse = emptyList()
@@ -113,12 +86,12 @@ package com.example.proyectofinalikotlin.viewmodels
         fun getAllFighters() {
             viewModelScope.launch {
                 try {
-                    val categoriesResponse = ApiService.instance.getAllCategories() // 🔥 Llamada a la API de categorías
+                    val categoriesResponse = ApiService.instance.getAllCategories()
                     val allFighters = mutableListOf<Fighter>()
 
                     for (category in categoriesResponse.response) {
                         val response = ApiService.instance.getFightersByCategory(category)
-                        allFighters.addAll(response.response ?: emptyList()) // 🔥 Se añaden luchadores de cada categoría
+                        allFighters.addAll(response.response ?: emptyList())
                     }
 
                     fighterListResponse = allFighters

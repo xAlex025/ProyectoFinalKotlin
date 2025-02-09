@@ -31,6 +31,8 @@ fun CategoryListScreen(viewModel: CategoryViewModel, onCategoryClick: (String) -
     val errorMessage = viewModel.errorMessage
 
 
+
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -66,6 +68,7 @@ fun CategoryListScreen(viewModel: CategoryViewModel, onCategoryClick: (String) -
             }
         }
     }
+
 
 
 @Composable

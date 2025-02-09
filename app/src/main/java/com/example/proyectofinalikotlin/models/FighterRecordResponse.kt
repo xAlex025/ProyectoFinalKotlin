@@ -25,5 +25,5 @@ data class FighterInfo(
 data class RecordStats(
     val win: Int,
     val loss: Int,
-    val draw: Int? = 0 // El campo draw es opcional y puede ser null
+    val draw: Int? = 0
 )

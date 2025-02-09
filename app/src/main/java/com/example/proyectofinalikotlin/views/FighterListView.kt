@@ -41,16 +41,14 @@ fun FighterListScreen(viewModel: FighterViewModel, category: String, onBack: () 
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
-            .padding(top = 10.dp) // ✅ Pequeño margen para evitar solapamientos
+            .padding(top = 8.dp)
     ) {
-        // 🔥 ENCABEZADO PERSONALIZADO (En lugar de TopAppBar)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.Black)
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically,
-
         ) {
             IconButton(onClick = onBack) {
                 Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = Color.White)
@@ -65,7 +63,6 @@ fun FighterListScreen(viewModel: FighterViewModel, category: String, onBack: () 
             )
         }
 
-        // ✅ Evita padding innecesario y aseguramos que LazyColumn comience justo después del encabezado
         Box(modifier = Modifier.fillMaxSize()) {
             when {
                 error -> {
@@ -92,8 +89,6 @@ fun FighterListScreen(viewModel: FighterViewModel, category: String, onBack: () 
                             FighterItem(fighter = item, onClick = {
                                 navController.navigate("fighter_detail/${item.id}")
                             })
-
-
                         }
                     }
                 }
@@ -102,17 +97,14 @@ fun FighterListScreen(viewModel: FighterViewModel, category: String, onBack: () 
     }
 }
 
-
-
-
 @Composable
 fun FighterItem(fighter: Fighter, onClick: () -> Unit) {
     Card(
         modifier = Modifier
-            .padding(8.dp) // 🔥 Margen uniforme
+            .padding(8.dp)
             .fillMaxWidth()
             .height(120.dp)
-            .clickable(onClick = onClick), // ✅ Ahora se puede hacer clic en toda la tarjeta
+            .clickable(onClick = onClick),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
@@ -123,7 +115,6 @@ fun FighterItem(fighter: Fighter, onClick: () -> Unit) {
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // ✅ Imagen del luchador con borde rojo
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(fighter.photo)
@@ -132,15 +123,14 @@ fun FighterItem(fighter: Fighter, onClick: () -> Unit) {
                 contentDescription = "Foto de ${fighter.name}",
                 modifier = Modifier
                     .size(80.dp)
-                    .border(2.dp, Color.Red, CircleShape) // 🔥 Borde rojo más grueso
+                    .border(2.dp, Color.Red, CircleShape)
                     .padding(2.dp)
             )
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            // 🔥 Información del luchador
             Column(
-                modifier = Modifier.weight(1f), // ✅ Asegura que el texto no se desborde
+                modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
@@ -152,7 +142,6 @@ fun FighterItem(fighter: Fighter, onClick: () -> Unit) {
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                // ✅ Categoría con fondo degradado
                 Box(
                     modifier = Modifier
                         .background(
@@ -172,7 +161,6 @@ fun FighterItem(fighter: Fighter, onClick: () -> Unit) {
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                // 🔥 Datos de altura y peso en fila con separación adecuada
                 Row {
                     Text(
                         text = "Altura: ${fighter.height ?: "N/D"}",
@@ -190,10 +178,3 @@ fun FighterItem(fighter: Fighter, onClick: () -> Unit) {
         }
     }
 }
-
-
-
-
-
-
-
